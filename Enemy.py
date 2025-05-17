@@ -1,10 +1,10 @@
 import math
 from pygame import Rect
 from pgzero.builtins import Actor
-
+from pgzero.builtins import sounds  # Adicione esta linha
 
 class Enemy:
-    def __init__(self, x, y):
+    def __init__(self, x, y, sound_enabled):
 
         # posição e velocidade
         self.pos_x = x
@@ -26,6 +26,8 @@ class Enemy:
 
         # vida do inimigo
         self.hp = 3
+
+        self.sound_enabled = sound_enabled
 
     # função para lidar com as animações do inimigo
     def update(self, dt, player, wave_number):
@@ -103,5 +105,7 @@ class Enemy:
         self.hp -= damage
         if self.hp <= 0:
             self.state = "death"
+            if self.sound_enabled:
+                sounds.explosion.play()
             self.frame_index = 0
             self.frame_timer = 0

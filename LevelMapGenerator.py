@@ -123,7 +123,7 @@ class Level:
         self.wave_timer_left = self.wave_timer
 
     # função para escrever o timer na tela
-    def draw_hud(self, screen, font):
+    def draw_hud(self, screen):
         screen.draw.text(f"Wave: {self.wave_number}", (310, 0), color="white", fontsize=24)
         minutes = int(self.wave_timer_left) // 60
         seconds = int(self.wave_timer_left) % 60

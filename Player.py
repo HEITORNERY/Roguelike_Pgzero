@@ -31,6 +31,7 @@ class Player:
         # vida e dano do player 
         self.health = 10.0
         self.damage = 3
+        self.enemies_killed = 0
 
         # sprites das animações do player com suas direções
         self.sprite_sheets = {
@@ -89,6 +90,7 @@ class Player:
                     self.frame_index = 0
                     self.frame_timer = 0
                     e.hit(self.damage)
+                    self.enemies_killed += 1
                     break
         
         # atualizar a animação
@@ -103,7 +105,7 @@ class Player:
                 self.cooldown_timer = 0
         
     # função para colocar os sprites na cena
-    def draw(self, screen, font):
+    def draw(self, screen):
         
         base = self.sprite_sheets[self.state]
         
