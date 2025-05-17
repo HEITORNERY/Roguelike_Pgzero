@@ -14,7 +14,8 @@ class Level:
         # terão listas para armazenar as posições que são adicionados os tiles e os outros objetos que compõem o cenário
         self.floor_tiles = []
         self.tree_tiles = []
-        self.house_tiles = []
+        self.mushroom_tiles = []
+        self.bush_tiles = []
 
         # informações para as waves
         self.wave_number = 1 
@@ -25,7 +26,7 @@ class Level:
         self.enemies_active = [] # lista dos inimigos ativos 
     
     # função para organizar os tiles no cenário
-    def generate_map(self, num_trees):
+    def generate_map(self, num_trees, num_mushroom, num_bush):
         
         # primeiro vou definir as posições dos tiles do floor por todo o cenário
         self.floor_tiles = [(x,y) for x in range(self.cols) for y in range(self.rows)]
@@ -41,15 +42,19 @@ class Level:
             available.remove(pos)
             trees += 1
         
-        # adicionar a casa no centro
-        house_pos_x = self.cols//2
-        house_pos_y = self.rows//2
-        self.house_tiles = [((house_pos_x, house_pos_y), "house_bottom"), ((house_pos_x, house_pos_y - 1), "house_top")]
+        mushroom = 0
+        while mushroom < num_mushroom:
+            pos = random.choice(available)
+            self.mushroom_tiles.append(pos)
+            available.remove(pos)
+            mushroom += 1
         
-         # remover os tiles da casa dos tiles disponíveis restantes
-        for pos in self.house_tiles:
-            if pos in available:
-                available.remove(pos)
+        bush = 0
+        while bush < num_bush:
+            pos = random.choice(available)
+            self.bush_tiles.append(pos)
+            available.remove(pos)
+            bush += 1
 
     def update(self, time_frame, spawn_enemy_callback):
 
@@ -81,7 +86,8 @@ class Level:
                 self.enemie_counter += 1
         
         # acabou o tempo e não tem inimigos ativos, então deve ser iniciado uma nova onda 
-        if self.wave_timer_left <= 0 and not self.enemies_active:
+        if self.wave_timer_left <= 0:
+            self.enemies_active.clear()
             self.next_wave()
 
     # função para adicionar os sprites dos tiles no cenário
@@ -99,11 +105,15 @@ class Level:
             pos_y = y * self.tile_size
             screen.blit("tree", (pos_x, pos_y))
 
-        # adicionar os tiles da casa
-        for (x,y), image_name in self.house_tiles:
+        for x,y in self.mushroom_tiles:
             pos_x = x * self.tile_size
             pos_y = y * self.tile_size
-            screen.blit(image_name, (pos_x, pos_y))
+            screen.blit("mushroom", (pos_x, pos_y))
+        
+        for x,y in self.bush_tiles:
+            pos_x = x * self.tile_size
+            pos_y = y * self.tile_size
+            screen.blit("bush", (pos_x, pos_y))
 
     def next_wave(self):
         self.wave_number += 1 # próxima wave 
